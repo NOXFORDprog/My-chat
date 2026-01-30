@@ -8,81 +8,81 @@
         :root { --bg: #0e1621; --header: #17212b; --msg: #182533; --my-msg: #2b5278; --text: white; --accent: #5288c1; }
         .light-theme { --bg: #f0f2f5; --header: #ffffff; --msg: #ffffff; --my-msg: #e1ffc7; --text: #000000; --accent: #0088cc; }
 
-        /* Убираем все отступы и фиксируем экран */
         html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: sans-serif; }
-        
-        /* Главный контейнер на весь экран */
         .app-container { display: flex; flex-direction: column; height: 100vh; width: 100vw; }
 
-        /* Шапка чата */
-        .header { height: 60px; background: var(--header); display: flex; justify-content: space-between; align-items: center; padding: 0 15px; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.2); }
-
-        /* Средняя часть: Чат + Боковая панель справа */
-        .middle-section { display: flex; flex: 1; overflow: hidden; }
+        /* Шапка - теперь только название */
+        .header { height: 50px; background: var(--header); display: flex; justify-content: center; align-items: center; flex-shrink: 0; border-bottom: 1px solid rgba(0,0,0,0.2); }
         
+        .middle-section { display: flex; flex: 1; overflow: hidden; }
         .chat-area { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 15px; gap: 10px; }
         
-        .side-panel { width: 70px; background: var(--header); border-left: 1px solid rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 15px; flex-shrink: 0; }
-        .user-slot { position: relative; width: 45px; height: 45px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
-        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--header); }
+        /* Боковая панель справа */
+        .side-panel { width: 65px; background: var(--header); border-left: 1px solid rgba(0,0,0,0.3); display: flex; flex-direction: column; align-items: center; padding-top: 10px; gap: 12px; flex-shrink: 0; }
+        .user-avatar { width: 42px; height: 42px; border-radius: 50%; background: var(--accent); background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; position: relative; }
+        .status-dot { position: absolute; bottom: 1px; right: 1px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--header); }
         .online { background: #4caf50; } .offline { background: #f44336; }
 
-        /* Зона ввода - ТЕПЕРЬ ФИКСИРОВАННАЯ ВЫСОТА */
-        .input-area { height: 70px; background: var(--header); display: flex; align-items: center; padding: 0 15px; gap: 10px; flex-shrink: 0; border-top: 1px solid var(--accent); }
-        .input-field { flex: 1; height: 45px; background: var(--bg); border: 1px solid var(--accent); color: var(--text); padding: 0 15px; border-radius: 25px; outline: none; font-size: 16px; }
-        .send-btn { background: none; border: none; font-size: 30px; color: var(--accent); cursor: pointer; }
+        /* Зона ввода - Кнопка настроек ТЕПЕРЬ ТУТ */
+        .input-area { height: 70px; background: var(--header); display: flex; align-items: center; padding: 0 12px; gap: 8px; flex-shrink: 0; border-top: 1px solid var(--accent); }
+        .input-field { flex: 1; height: 42px; background: var(--bg); border: 1px solid var(--accent); color: var(--text); padding: 0 15px; border-radius: 20px; outline: none; font-size: 16px; }
+        .icon-btn { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 
-        /* Сообщения */
-        .msg-container { display: flex; gap: 10px; max-width: 85%; }
+        .msg-container { display: flex; gap: 10px; max-width: 85%; align-items: flex-end; }
         .my-container { align-self: flex-end; flex-direction: row-reverse; }
-        .msg-body { background: var(--msg); padding: 10px; border-radius: 12px; font-size: 15px; }
+        .msg-body { background: var(--msg); padding: 10px; border-radius: 12px; font-size: 15px; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
         .my-container .msg-body { background: var(--my-msg); }
+        .chat-img { max-width: 100%; border-radius: 8px; margin-top: 5px; display: block; }
 
-        /* Модалки */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
         .modal-content { background: var(--header); padding: 20px; border-radius: 15px; width: 280px; display: flex; flex-direction: column; gap: 12px; }
-        .modal-btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .modal-btn { background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <div id="group-name-display" style="font-weight: bold;">Загрузка...</div>
-            <button onclick="openSettings()" style="background:none; border:none; font-size: 24px; color:var(--accent);">⚙️</button>
+            <div id="group-name-display" style="font-weight: bold; opacity: 0.9;">Чат Шумкара</div>
         </div>
 
         <div class="middle-section">
             <div id="chat" class="chat-area"></div>
             <div class="side-panel">
-                <div style="font-size: 10px; opacity: 0.6;">USERS</div>
+                <div style="font-size: 9px; opacity: 0.5; margin-bottom: 5px;">USERS</div>
                 <div id="users-list"></div>
             </div>
         </div>
 
         <div class="input-area">
+            <button onclick="openSettings()" class="icon-btn" title="Настройки">⚙️</button>
+            <label class="icon-btn" title="Прикрепить фото">📎<input type="file" id="imgInput" hidden accept="image/*"></label>
             <input type="text" id="msgInput" class="input-field" placeholder="Написать..." autocomplete="off">
-            <button id="sendBtn" class="send-btn">➤</button>
+            <button id="sendBtn" class="icon-btn">➤</button>
         </div>
     </div>
 
     <div id="settings-modal" class="modal"><div class="modal-content">
-        <button class="modal-btn" onclick="changeName()">👤 Сменить ник</button>
+        <h3 style="margin:0; text-align:center">Настройки</h3>
+        <label class="modal-btn">🖼️ Изменить фото авы <input type="file" id="avaInput" hidden accept="image/*"></label>
+        <button class="modal-btn" onclick="changeName()">👤 Выйти / Сменить ник</button>
         <button class="modal-btn" onclick="toggleTheme()">🌓 Сменить тему</button>
         <button id="adminBtn" class="modal-btn" style="display:none; background: #ff9800;" onclick="openAdmin()">📊 Админ-панель</button>
         <button class="modal-btn" onclick="closeSettings()" style="background: #e53935;">Закрыть</button>
     </div></div>
 
     <div id="admin-modal" class="modal"><div class="modal-content">
-        <button class="modal-btn" style="background: #4caf50;" onclick="editGroupName()">📝 Сменить название</button>
-        <button class="modal-btn" onclick="adminClear()" style="background: #444;">🧹 Очистить чат</button>
-        <div id="admin-stats" style="font-size: 12px; margin-top: 10px;"></div>
+        <h3 style="margin:0; text-align:center">Админ-панель</h3>
+        <button class="modal-btn" style="background: #4caf50;" onclick="editGroupName()">📝 Название группы</button>
+        <button class="modal-btn" onclick="adminClear()" style="background: #444;">🧹 Очистить все сообщения</button>
+        <div id="admin-stats" style="font-size: 12px; margin-top: 10px; max-height: 100px; overflow-y:auto;"></div>
         <button class="modal-btn" onclick="document.getElementById('admin-modal').style.display='none'">Назад</button>
     </div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded, set, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsDKuyifzMqmZDi6-UpvWWh7q3S_QW97E",
@@ -96,30 +96,45 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const storage = getStorage(app);
 
-        let myName = localStorage.getItem('chatName') || prompt("Имя:") || "Гость";
+        let myName = localStorage.getItem('chatName') || prompt("Твой ник:") || "Гость";
         localStorage.setItem('chatName', myName);
         if (myName.toLowerCase() === "шумкар") document.getElementById('adminBtn').style.display = 'block';
 
         const myStatusRef = ref(db, 'status/' + myName);
-        set(myStatusRef, { online: true });
+        set(myStatusRef, { online: true, ava: localStorage.getItem('myAva') || '' });
         window.onbeforeunload = () => set(myStatusRef, { online: false });
 
         onValue(ref(db, 'groupName'), (s) => document.getElementById('group-name-display').innerText = s.val() || "Чат Шумкара");
-        window.editGroupName = () => { let n = prompt("Новое название:"); if(n) set(ref(db, 'groupName'), n); };
 
         window.openSettings = () => document.getElementById('settings-modal').style.display = 'flex';
         window.closeSettings = () => document.getElementById('settings-modal').style.display = 'none';
         window.toggleTheme = () => document.body.classList.toggle('light-theme');
         window.changeName = () => { localStorage.clear(); location.reload(); };
 
-        window.openAdmin = () => {
-            closeSettings();
-            document.getElementById('admin-modal').style.display = 'flex';
-            onValue(ref(db, 'status'), (snap) => {
-                let h = "<b>Статусы:</b><br>"; snap.forEach(s => h += `• ${s.key}: ${s.val().online ? '✅' : '❌'}<br>`);
-                document.getElementById('admin-stats').innerHTML = h;
-            }, {onlyOnce: true});
+        // Фото в чат
+        document.getElementById('imgInput').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const imgRef = sRef(storage, 'chat/' + Date.now() + '_' + file.name);
+                await uploadBytes(imgRef, file);
+                const url = await getDownloadURL(imgRef);
+                push(ref(db, 'messages'), { name: myName, text: '', img: url });
+            }
+        };
+
+        // Аватарка
+        document.getElementById('avaInput').onchange = async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const avaRef = sRef(storage, 'avas/' + myName);
+                await uploadBytes(avaRef, file);
+                const url = await getDownloadURL(avaRef);
+                localStorage.setItem('myAva', url);
+                set(myStatusRef, { online: true, ava: url });
+                location.reload();
+            }
         };
 
         const chatRef = ref(db, 'messages');
@@ -136,21 +151,28 @@
             const isMy = d.name === myName;
             const div = document.createElement('div');
             div.className = `msg-container ${isMy ? 'my-container' : ''}`;
-            div.innerHTML = `<div class="msg-body" onclick="${isMy?`if(confirm('Удалить?'))remove(ref(db,'messages/${snap.key}'))`:''}">
-                <div style="font-size:10px; color:var(--accent); font-weight:bold;">${d.name}</div>
-                <div>${d.text}</div>
+            div.innerHTML = `<div class="msg-body">
+                <div style="font-size:10px; color:var(--accent); font-weight:bold; margin-bottom:2px;">${d.name}</div>
+                ${d.text ? `<div>${d.text}</div>` : ''}
+                ${d.img ? `<img src="${d.img}" class="chat-img">` : ''}
             </div>`;
             const chatDiv = document.getElementById('chat');
             chatDiv.appendChild(div);
             chatDiv.scrollTop = chatDiv.scrollHeight;
         });
 
-        window.adminClear = () => { if(prompt("Пароль:")==="1234") set(chatRef, null); location.reload(); };
-
         onValue(ref(db, 'status'), (snap) => {
             const l = document.getElementById('users-list'); l.innerHTML = "";
-            snap.forEach(u => l.innerHTML += `<div class="user-slot">${u.key[0].toUpperCase()}<div class="status-dot ${u.val().online ? 'online' : 'offline'}"></div></div>`);
+            snap.forEach(u => {
+                const data = u.val();
+                const bg = data.ava ? `background-image:url(${data.ava})` : '';
+                l.innerHTML += `<div class="user-avatar" style="${bg}">${data.ava ? '' : u.key[0]}<div class="status-dot ${data.online ? 'online' : 'offline'}"></div></div>`;
+            });
         });
+        
+        window.editGroupName = () => { let n = prompt("Новое название чата:"); if(n) set(ref(db,'groupName'), n); };
+        window.adminClear = () => { if(confirm("Очистить историю для всех?")) { if(prompt("Пароль админа:")==="1234") set(chatRef, null); location.reload(); } };
+        window.openAdmin = () => { closeSettings(); document.getElementById('admin-modal').style.display = 'flex'; };
     </script>
 </body>
 </html>
