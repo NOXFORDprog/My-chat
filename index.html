@@ -3,45 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Чат Шумкара</title>
+    <title>Super Chat Шумкара</title>
     <style>
-        body { font-family: sans-serif; background: #0e1621; color: white; margin: 0; display: flex; flex-direction: column; height: 100vh; }
-        #header { background: #17212b; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
-        #chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        :root { --bg: #0e1621; --header: #17212b; --msg: #182533; --my-msg: #2b5278; --text: white; --accent: #5288c1; }
+        .light-theme { --bg: #f0f2f5; --header: #ffffff; --msg: #ffffff; --my-msg: #e1ffc7; --text: #000000; --accent: #0088cc; }
+
+        body { font-family: sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; height: 100vh; transition: 0.3s; }
         
-        /* Стили сообщения по твоему рисунку */
+        /* Боковая панель справа */
+        #side-panel { width: 80px; background: var(--header); border-left: 1px solid #000; display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 15px; order: 2; }
+        .user-slot { position: relative; width: 45px; height: 45px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--header); }
+        .online { background: #4caf50; } .offline { background: #f44336; }
+
+        /* Основная часть чата */
+        #main-chat { flex: 1; display: flex; flex-direction: column; order: 1; position: relative; }
+        #header { background: var(--header); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        #chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 12px; }
+        
         .msg-container { display: flex; gap: 10px; align-items: flex-end; max-width: 85%; }
-        .avatar { width: 35px; height: 35px; border-radius: 50%; background: #5288c1; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 16px; flex-shrink: 0; }
-        .msg-body { background: #182533; padding: 8px 12px; border-radius: 12px 12px 12px 0; position: relative; display: flex; flex-direction: column; }
-        .msg-name { font-size: 13px; color: #5288c1; font-weight: bold; margin-bottom: 4px; }
-        .msg-text { font-size: 15px; margin-bottom: 10px; line-height: 1.4; }
-        .msg-time { font-size: 10px; color: #7f91a4; align-self: flex-end; position: absolute; bottom: 5px; right: 8px; }
-        
-        /* Твои сообщения (справа) */
         .my-container { align-self: flex-end; flex-direction: row-reverse; }
-        .my-container .msg-body { background: #2b5278; border-radius: 12px 12px 0 12px; }
+        .msg-body { background: var(--msg); padding: 8px 12px; border-radius: 12px; position: relative; cursor: pointer; }
+        .my-container .msg-body { background: var(--my-msg); }
+        .msg-name { font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 3px; }
+        .msg-time { font-size: 9px; color: gray; margin-left: 10px; }
         
-        #input-area { background: #17212b; padding: 10px; display: flex; align-items: center; }
-        input { flex: 1; background: #242f3d; border: none; color: white; padding: 12px; border-radius: 20px; outline: none; }
-        .btn-ui { background: #242f3d; color: #5288c1; border: none; padding: 6px 10px; border-radius: 5px; font-size: 12px; }
-        #sendBtn { background: none; border: none; color: #5288c1; font-size: 26px; margin-left: 10px; }
+        #input-area { background: var(--header); padding: 10px; display: flex; align-items: center; }
+        input { flex: 1; background: var(--bg); border: none; color: var(--text); padding: 12px; border-radius: 20px; outline: none; }
+        .btn-ui { background: var(--accent); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
-<body>
-    <div id="header">
-        <button class="btn-ui" onclick="changeName()">👤 Имя</button>
-        <div style="font-weight: bold;">Чат Шумкара</div>
-        <button class="btn-ui" onclick="adminClear()">⚙️</button>
+<body id="body">
+
+    <div id="side-panel">
+        <div style="font-size: 10px; opacity: 0.7;">USERS</div>
+        <div id="users-list"></div>
     </div>
-    <div id="chat"></div>
-    <div id="input-area">
-        <input type="text" id="msgInput" placeholder="Сообщение..." autocomplete="off">
-        <button id="sendBtn">➤</button>
+
+    <div id="main-chat">
+        <div id="header">
+            <button class="btn-ui" onclick="toggleTheme()">🌓 Тема</button>
+            <div id="current-user-display" style="font-weight: bold;">Чат</div>
+            <button class="btn-ui" onclick="location.reload()">🔄</button>
+        </div>
+        <div id="chat"></div>
+        <div id="input-area">
+            <input type="text" id="msgInput" placeholder="Написать сообщение..." autocomplete="off">
+            <button id="sendBtn" style="background:none; border:none; font-size:24px; color:var(--accent); cursor:pointer;">➤</button>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, set } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, set, onValue, remove, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsDKuyifzMqmZDi6-UpvWWh7q3S_QW97E",
@@ -55,52 +69,88 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+
+        // --- ЛОГИКА АККАУНТА ---
+        let myName = localStorage.getItem('chatName');
+        let myPass = localStorage.getItem('chatPass');
+
+        if (!myName) {
+            myName = prompt("Создай имя (или введи существующее):");
+            myPass = prompt("Введи пароль:");
+            localStorage.setItem('chatName', myName);
+            localStorage.setItem('chatPass', myPass);
+        }
+
+        document.getElementById('current-user-display').innerText = myName;
+
+        // Статус "В сети"
+        const myStatusRef = ref(db, 'status/' + myName);
+        set(myStatusRef, { online: true });
+        window.onbeforeunload = () => set(myStatusRef, { online: false });
+
+        // --- ТЕМЫ ---
+        window.toggleTheme = () => {
+            document.body.classList.toggle('light-theme');
+        };
+
+        // --- СООБЩЕНИЯ ---
         const chatRef = ref(db, 'messages');
-
-        let userName = localStorage.getItem('chatName') || prompt("Как тебя зовут?") || "Гость";
-        localStorage.setItem('chatName', userName);
-
-        window.changeName = () => {
-            let n = prompt("Новое имя:");
-            if(n) { localStorage.setItem('chatName', n); location.reload(); }
-        };
-
-        window.adminClear = () => {
-            if (prompt("Пароль:") === "1234") { set(chatRef, null); location.reload(); }
-        };
-
         const input = document.getElementById('msgInput');
-        const chat = document.getElementById('chat');
+        const chatDiv = document.getElementById('chat');
 
         document.getElementById('sendBtn').onclick = () => {
             if (input.value.trim()) {
-                const now = new Date();
-                const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-                push(chatRef, { name: userName, text: input.value, time: timeStr });
+                const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                push(chatRef, { name: myName, text: input.value, time: time, pass: myPass });
                 input.value = "";
             }
         };
 
         onChildAdded(chatRef, (snapshot) => {
             const data = snapshot.val();
-            if (data) {
-                const isMy = data.name === userName;
-                const div = document.createElement('div');
-                div.className = `msg-container ${isMy ? 'my-container' : ''}`;
-                
-                const firstLetter = data.name.charAt(0).toUpperCase();
-                
-                div.innerHTML = `
-                    <div class="avatar">${firstLetter}</div>
-                    <div class="msg-body">
-                        <div class="msg-name">${data.name}</div>
-                        <div class="msg-text">${data.text}</div>
-                        <div class="msg-time">${data.time || ''}</div>
+            const id = snapshot.key;
+            const isMy = data.name === myName;
+            
+            const div = document.createElement('div');
+            div.className = `msg-container ${isMy ? 'my-container' : ''}`;
+            div.id = "msg-" + id;
+            div.innerHTML = `
+                <div class="msg-body" onclick="deleteMsg('${id}', '${data.pass}')">
+                    <div class="msg-name">${data.name} <span class="msg-time">${data.time}</span></div>
+                    <div>${data.text}</div>
+                </div>
+            `;
+            chatDiv.appendChild(div);
+            chatDiv.scrollTop = chatDiv.scrollHeight;
+        });
+
+        window.deleteMsg = (id, msgPass) => {
+            if (msgPass === myPass) {
+                if (confirm("Удалить твое сообщение?")) {
+                    remove(ref(db, 'messages/' + id));
+                }
+            }
+        };
+
+        onChildRemoved(chatRef, (snapshot) => {
+            document.getElementById("msg-" + snapshot.key)?.remove();
+        });
+
+        // --- СПИСОК ПОЛЬЗОВАТЕЛЕЙ ---
+        onValue(ref(db, 'status'), (snapshot) => {
+            const list = document.getElementById('users-list');
+            list.innerHTML = "";
+            snapshot.forEach(user => {
+                const u = user.val();
+                const name = user.key;
+                const dotClass = u.online ? 'online' : 'offline';
+                list.innerHTML += `
+                    <div class="user-slot" title="${name}">
+                        ${name[0].toUpperCase()}
+                        <div class="status-dot ${dotClass}"></div>
                     </div>
                 `;
-                chat.appendChild(div);
-                chat.scrollTop = chat.scrollHeight;
-            }
+            });
         });
     </script>
 </body>
