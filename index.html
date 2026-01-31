@@ -10,49 +10,42 @@
         
         .app-container { display: flex; flex-direction: column; height: 100dvh; width: 100vw; position: relative; }
 
-        /* Верхний бар с квадратом названия */
-        .top-bar { height: 60px; display: flex; align-items: center; padding: 0 10px; gap: 10px; flex-shrink: 0; z-index: 10; }
-        .group-box { background: var(--header); border: 2px solid var(--accent); border-radius: 8px; padding: 5px 12px; font-weight: bold; min-width: 80px; text-align: center; }
+        /* Верхняя панель */
+        .top-bar { height: 60px; display: flex; align-items: center; padding: 0 10px; gap: 10px; flex-shrink: 0; }
+        .group-box { background: var(--header); border: 2px solid var(--accent); border-radius: 8px; padding: 5px 12px; font-weight: bold; }
 
         .middle-section { display: flex; flex: 1; overflow: hidden; position: relative; }
-        .chat-area { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 10px; gap: 10px; }
+        .chat-area { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 10px; gap: 15px; }
         
-        /* Выдвижная панель */
+        /* Боковое меню */
         .side-panel { 
             position: absolute; right: 0; top: 0; bottom: 0; width: 75px; 
             background: var(--header); border-left: 2px solid var(--accent);
             display: flex; flex-direction: column; align-items: center; padding: 10px 0;
-            transform: translateX(100%); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 20;
+            transform: translateX(100%); transition: 0.3s; z-index: 20;
         }
         .side-panel.open { transform: translateX(0); }
         
-        .users-scroll { flex: 1; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; align-items: center; width: 100%; }
-        .user-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); background-size: cover; display: flex; align-items: center; justify-content: center; font-weight: bold; position: relative; border: 1px solid rgba(255,255,255,0.2); }
+        .user-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; position: relative; margin-bottom: 10px; }
         .status-dot { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--header); }
 
-        /* НИЖНИЕ БЛОКИ (ТВОЙ ЧЕРТЕЖ) */
-        .bottom-controls { display: flex; align-items: flex-end; padding: 10px; gap: 10px; background: var(--bg); }
-        
-        .media-square { 
-            display: flex; flex-direction: column; gap: 10px; background: var(--header); 
-            border: 2px solid var(--accent); border-radius: 12px; padding: 8px; width: 45px; align-items: center;
-        }
-        
-        .input-square { 
-            flex: 1; display: flex; align-items: center; background: var(--header); 
-            border: 2px solid var(--accent); border-radius: 12px; padding: 5px 12px; min-height: 48px;
-        }
-        .input-field { flex: 1; background: none; border: none; color: white; outline: none; font-size: 16px; padding: 5px 0; }
-
-        .icon-btn { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; padding: 0; }
-
-        /* Сообщения */
-        .msg-bubble { background: var(--msg); padding: 10px; border-radius: 12px; max-width: 80%; align-self: flex-start; word-wrap: break-word; }
+        /* Сообщения с временем */
+        .msg-bubble { background: var(--msg); padding: 8px 12px; border-radius: 12px; max-width: 80%; align-self: flex-start; position: relative; cursor: pointer; }
         .my-msg { align-self: flex-end; background: var(--my-msg); }
+        .msg-info { font-size: 10px; opacity: 0.6; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+        .msg-time { font-size: 9px; text-align: right; margin-top: 4px; opacity: 0.5; }
 
-        /* Модалки (Закрываются по клику на фон) */
+        /* Нижние блоки */
+        .bottom-controls { display: flex; align-items: flex-end; padding: 10px; gap: 10px; background: var(--bg); }
+        .media-square { display: flex; flex-direction: column; gap: 10px; background: var(--header); border: 2px solid var(--accent); border-radius: 12px; padding: 8px; width: 45px; align-items: center; }
+        .input-square { flex: 1; display: flex; align-items: center; background: var(--header); border: 2px solid var(--accent); border-radius: 12px; padding: 5px 12px; min-height: 48px; }
+        .input-field { flex: 1; background: none; border: none; color: white; outline: none; font-size: 16px; }
+
+        .icon-btn { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; }
+
+        /* Модалка */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100; align-items: center; justify-content: center; }
-        .modal-content { background: var(--header); padding: 20px; border-radius: 20px; width: 280px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--accent); }
+        .modal-content { background: var(--header); padding: 20px; border-radius: 20px; width: 290px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--accent); }
         .modal-btn { padding: 12px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; color: white; width: 100%; }
     </style>
 </head>
@@ -60,27 +53,26 @@
 
     <div class="app-container">
         <div class="top-bar">
-            <div class="group-box" id="display-group-name">Школа</div>
-            <div id="typing-info" style="font-size: 10px; color: #4caf50; flex: 1;"></div>
+            <div class="group-box" id="display-group-name">Загрузка...</div>
+            <div style="flex:1"></div>
             <button onclick="togglePanel()" class="icon-btn" id="arrow-btn">➔</button>
         </div>
 
         <div class="middle-section">
             <div id="chat-box" class="chat-area"></div>
-            
             <div id="side-panel" class="side-panel">
-                <div class="users-scroll" id="users-list"></div>
+                <div id="users-list" style="flex:1; overflow-y:auto; width:100%; display:flex; flex-direction:column; align-items:center;"></div>
                 <button onclick="openSettings()" class="icon-btn" style="margin-top: 10px;">⚙️</button>
             </div>
         </div>
 
         <div class="bottom-controls">
             <div class="media-square">
-                <button onclick="alert('Скоро!')" class="icon-btn">😊</button>
-                <label class="icon-btn">📎<input type="file" id="imgUpload" hidden accept="image/*"></label>
+                <button class="icon-btn">😊</button>
+                <label class="icon-btn">📎<input type="file" id="imgUpload" hidden></label>
             </div>
             <div class="input-square">
-                <input type="text" id="msgInput" class="input-field" placeholder="Написать...">
+                <input type="text" id="msgInput" class="input-field" placeholder="Сообщение...">
                 <button id="sendBtn" class="icon-btn">➤</button>
             </div>
         </div>
@@ -88,23 +80,21 @@
 
     <div id="settings-modal" class="modal" onclick="this.style.display='none'">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 style="margin:0; text-align:center">Настройки</h3>
+            <h2 style="margin:0; text-align:center; font-size:18px;">Настройки</h2>
             <button class="modal-btn" style="background:var(--accent)" onclick="location.reload()">👤 Сменить ник</button>
             
-            <div id="admin-section" style="display:none; flex-direction:column; gap:10px; border-top:1px solid #444; pt:10px;">
-                <p style="font-size:12px; color:orange; margin:5px 0 0 0;">Управление:</p>
-                <button class="modal-btn" style="background:#4caf50" onclick="renameGroup()">📝 Сменить имя чата</button>
+            <div id="admin-section" style="display:none; flex-direction:column; gap:10px; border-top:1px solid #444; padding-top:10px;">
+                <button class="modal-btn" style="background:#4caf50" onclick="renameGroup()">📝 Имя чата</button>
                 <button class="modal-btn" style="background:#444" onclick="clearMessages()">🧹 Очистить чат</button>
-                <div id="user-manage-list" style="max-height:100px; overflow-y:auto; background:rgba(0,0,0,0.2); padding:5px; border-radius:5px;"></div>
+                <div id="admin-users" style="max-height:80px; overflow-y:auto;"></div>
             </div>
-
             <button class="modal-btn" style="background:#e53935" onclick="document.getElementById('settings-modal').style.display='none'">Закрыть</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, set, onValue, remove, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, set, onValue, remove, serverTimestamp, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsDKuyifzMqmZDi6-UpvWWh7q3S_QW97E",
@@ -118,82 +108,60 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let myName = localStorage.getItem('chatName') || prompt("Твой ник:") || "Гость";
+        let myName = localStorage.getItem('chatName') || prompt("Ник:") || "Гость";
         localStorage.setItem('chatName', myName);
 
-        // Проверка на админа (Шумкар)
-        if (myName.toLowerCase() === "шумкар") {
-            document.getElementById('admin-section').style.display = 'flex';
-        }
+        if (myName.toLowerCase() === "шумкар") document.getElementById('admin-section').style.display = 'flex';
 
-        window.togglePanel = () => {
-            const p = document.getElementById('side-panel');
-            const b = document.getElementById('arrow-btn');
-            p.classList.toggle('open');
-            b.innerText = p.classList.contains('open') ? '➔' : '➔';
-            b.style.transform = p.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
-        };
+        window.togglePanel = () => document.getElementById('side-panel').classList.toggle('open');
+        window.openSettings = () => document.getElementById('settings-modal').style.display = 'flex';
 
-        window.openSettings = () => {
-            document.getElementById('settings-modal').style.display = 'flex';
-            if(myName.toLowerCase() === "шумкар") loadUsersForAdmin();
-        };
-
-        // Логика чата
         const chatRef = ref(db, 'messages');
         const input = document.getElementById('msgInput');
 
+        // Отправка
         document.getElementById('sendBtn').onclick = () => {
             if (input.value.trim()) {
-                push(chatRef, { name: myName, text: input.value, time: serverTimestamp() });
+                push(chatRef, { name: myName, text: input.value, time: Date.now() });
                 input.value = "";
             }
         };
 
+        // Отображение сообщений
         onChildAdded(chatRef, (snap) => {
             const d = snap.val();
+            const date = new Date(d.time);
+            const timeStr = date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
+            
             const div = document.createElement('div');
             div.className = `msg-bubble ${d.name === myName ? 'my-msg' : ''}`;
-            div.innerHTML = `<small style="color:var(--accent); font-weight:bold;">${d.name}</small><div>${d.text}</div>`;
+            div.id = 'msg-' + snap.key;
+            div.onclick = () => { if(d.name === myName && confirm("Удалить это сообщение?")) remove(ref(db, `messages/${snap.key}`)); };
+            
+            div.innerHTML = `
+                <div class="msg-info"><b>${d.name}</b></div>
+                <div>${d.text}</div>
+                <div class="msg-time">${timeStr}</div>
+            `;
             document.getElementById('chat-box').appendChild(div);
             document.getElementById('chat-box').scrollTop = document.getElementById('chat-box').scrollHeight;
         });
 
-        // Статусы и пользователи
+        onChildRemoved(chatRef, (snap) => { document.getElementById('msg-' + snap.key)?.remove(); });
+
+        // Админка
+        window.clearMessages = () => { if(confirm("Очистить историю?")) set(ref(db, 'messages'), null); };
+        window.renameGroup = () => { let n = prompt("Имя чата:"); if(n) set(ref(db, 'groupName'), n); };
+        onValue(ref(db, 'groupName'), (s) => document.getElementById('display-group-name').innerText = s.val() || "Школа");
+
+        // Пользователи
         onValue(ref(db, 'status'), (snap) => {
             const list = document.getElementById('users-list');
             list.innerHTML = "";
             snap.forEach(u => {
-                const isOnline = u.val().online;
-                list.innerHTML += `<div class="user-avatar">${u.key[0]}<div class="status-dot" style="background:${isOnline ? '#4caf50' : '#f44336'}"></div></div>`;
+                list.innerHTML += `<div class="user-avatar">${u.key[0]}<div class="status-dot" style="background:${u.val().online ? '#4caf50' : '#f44336'}"></div></div>`;
             });
         });
-
-        // АДМИН ФУНКЦИИ
-        window.renameGroup = () => {
-            let n = prompt("Новое имя чата:");
-            if(n) set(ref(db, 'groupName'), n);
-        };
-        onValue(ref(db, 'groupName'), (s) => document.getElementById('display-group-name').innerText = s.val() || "Школа");
-
-        window.clearMessages = () => {
-            if(confirm("Удалить все сообщения?")) set(chatRef, null);
-        };
-
-        function loadUsersForAdmin() {
-            onValue(ref(db, 'status'), (snap) => {
-                const container = document.getElementById('user-manage-list');
-                container.innerHTML = "";
-                snap.forEach(u => {
-                    container.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                        <span style="font-size:12px;">${u.key}</span>
-                        <button onclick="removeUser('${u.key}')" style="background:red; color:white; border:none; border-radius:3px; font-size:10px;">Удалить</button>
-                    </div>`;
-                });
-            }, {onlyOnce: true});
-        }
-        window.removeUser = (name) => { if(confirm(`Удалить ${name}?`)) remove(ref(db, `status/${name}`)); };
     </script>
 </body>
 </html>
-
