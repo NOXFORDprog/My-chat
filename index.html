@@ -29,17 +29,26 @@
         .user-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: bold; position: relative; margin-bottom: 10px; }
         .status-dot { position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--header); }
 
-        /* Сообщения с временем */
+        /* Сообщения */
         .msg-bubble { background: var(--msg); padding: 8px 12px; border-radius: 12px; max-width: 80%; align-self: flex-start; position: relative; cursor: pointer; }
         .my-msg { align-self: flex-end; background: var(--my-msg); }
-        .msg-info { font-size: 10px; opacity: 0.6; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 3px; }
+        .msg-info { font-size: 10px; opacity: 0.6; margin-bottom: 3px; }
         .msg-time { font-size: 9px; text-align: right; margin-top: 4px; opacity: 0.5; }
 
         /* Нижние блоки */
-        .bottom-controls { display: flex; align-items: flex-end; padding: 10px; gap: 10px; background: var(--bg); }
+        .bottom-controls { display: flex; align-items: flex-end; padding: 10px; gap: 10px; background: var(--bg); position: relative; }
         .media-square { display: flex; flex-direction: column; gap: 10px; background: var(--header); border: 2px solid var(--accent); border-radius: 12px; padding: 8px; width: 45px; align-items: center; }
         .input-square { flex: 1; display: flex; align-items: center; background: var(--header); border: 2px solid var(--accent); border-radius: 12px; padding: 5px 12px; min-height: 48px; }
         .input-field { flex: 1; background: none; border: none; color: white; outline: none; font-size: 16px; }
+
+        /* ПАНЕЛЬ ЭМОДЗИ */
+        #emoji-picker { 
+            display: none; position: absolute; bottom: 100%; left: 10px; 
+            background: var(--header); border: 2px solid var(--accent); 
+            border-radius: 12px; padding: 10px; width: 180px; 
+            flex-wrap: wrap; gap: 8px; z-index: 50; 
+        }
+        .emoji-item { font-size: 22px; cursor: pointer; }
 
         .icon-btn { background: none; border: none; font-size: 24px; color: var(--accent); cursor: pointer; }
 
@@ -67,8 +76,19 @@
         </div>
 
         <div class="bottom-controls">
+            <div id="emoji-picker">
+                <span class="emoji-item" onclick="addEmoji('😊')">😊</span>
+                <span class="emoji-item" onclick="addEmoji('😂')">😂</span>
+                <span class="emoji-item" onclick="addEmoji('❤️')">❤️</span>
+                <span class="emoji-item" onclick="addEmoji('🔥')">🔥</span>
+                <span class="emoji-item" onclick="addEmoji('👍')">👍</span>
+                <span class="emoji-item" onclick="addEmoji('😎')">😎</span>
+                <span class="emoji-item" onclick="addEmoji('😱')">😱</span>
+                <span class="emoji-item" onclick="addEmoji('🙌')">🙌</span>
+            </div>
+
             <div class="media-square">
-                <button class="icon-btn">😊</button>
+                <button onclick="toggleEmoji()" class="icon-btn">😊</button>
                 <label class="icon-btn">📎<input type="file" id="imgUpload" hidden></label>
             </div>
             <div class="input-square">
@@ -86,7 +106,6 @@
             <div id="admin-section" style="display:none; flex-direction:column; gap:10px; border-top:1px solid #444; padding-top:10px;">
                 <button class="modal-btn" style="background:#4caf50" onclick="renameGroup()">📝 Имя чата</button>
                 <button class="modal-btn" style="background:#444" onclick="clearMessages()">🧹 Очистить чат</button>
-                <div id="admin-users" style="max-height:80px; overflow-y:auto;"></div>
             </div>
             <button class="modal-btn" style="background:#e53935" onclick="document.getElementById('settings-modal').style.display='none'">Закрыть</button>
         </div>
@@ -94,7 +113,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded, set, onValue, remove, serverTimestamp, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        import { getDatabase, ref, push, onChildAdded, set, onValue, remove, onChildRemoved } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsDKuyifzMqmZDi6-UpvWWh7q3S_QW97E",
@@ -110,16 +129,26 @@
 
         let myName = localStorage.getItem('chatName') || prompt("Ник:") || "Гость";
         localStorage.setItem('chatName', myName);
-
         if (myName.toLowerCase() === "шумкар") document.getElementById('admin-section').style.display = 'flex';
 
         window.togglePanel = () => document.getElementById('side-panel').classList.toggle('open');
         window.openSettings = () => document.getElementById('settings-modal').style.display = 'flex';
 
+        // СМАЙЛИКИ
+        window.toggleEmoji = () => {
+            const p = document.getElementById('emoji-picker');
+            p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+        };
+        window.addEmoji = (emo) => {
+            const input = document.getElementById('msgInput');
+            input.value += emo;
+            input.focus();
+            document.getElementById('emoji-picker').style.display = 'none';
+        };
+
         const chatRef = ref(db, 'messages');
         const input = document.getElementById('msgInput');
 
-        // Отправка
         document.getElementById('sendBtn').onclick = () => {
             if (input.value.trim()) {
                 push(chatRef, { name: myName, text: input.value, time: Date.now() });
@@ -127,7 +156,6 @@
             }
         };
 
-        // Отображение сообщений
         onChildAdded(chatRef, (snap) => {
             const d = snap.val();
             const date = new Date(d.time);
@@ -136,7 +164,7 @@
             const div = document.createElement('div');
             div.className = `msg-bubble ${d.name === myName ? 'my-msg' : ''}`;
             div.id = 'msg-' + snap.key;
-            div.onclick = () => { if(d.name === myName && confirm("Удалить это сообщение?")) remove(ref(db, `messages/${snap.key}`)); };
+            div.onclick = () => { if(d.name === myName && confirm("Удалить?")) remove(ref(db, `messages/${snap.key}`)); };
             
             div.innerHTML = `
                 <div class="msg-info"><b>${d.name}</b></div>
@@ -149,12 +177,11 @@
 
         onChildRemoved(chatRef, (snap) => { document.getElementById('msg-' + snap.key)?.remove(); });
 
-        // Админка
-        window.clearMessages = () => { if(confirm("Очистить историю?")) set(ref(db, 'messages'), null); };
+        // ФУНКЦИИ АДМИНА
+        window.clearMessages = () => { if(confirm("Очистить чат?")) set(ref(db, 'messages'), null); };
         window.renameGroup = () => { let n = prompt("Имя чата:"); if(n) set(ref(db, 'groupName'), n); };
         onValue(ref(db, 'groupName'), (s) => document.getElementById('display-group-name').innerText = s.val() || "Школа");
 
-        // Пользователи
         onValue(ref(db, 'status'), (snap) => {
             const list = document.getElementById('users-list');
             list.innerHTML = "";
